@@ -4,6 +4,7 @@
 
     <string name="pref_sorting_key">sort</string>
     <string name="pref_sorting_lable" translatable="false">Sort Movies</string>
+    <string name="pref_sorting_default_value" translatable="false">popular</string>
     <string name="pref_sorting_popular" translatable="false">Popular</string>
     <string name="pref_sorting_top" translatable="false">Top Rated</string>
     <string name="pref_sorting_favorite" translatable="false">Favorite</string>
@@ -11,4 +12,13 @@
 
     <string name="add_to_favorite" translatable="false">Add To Favorite</string>
     <string name="remove_from_favorite" translatable="false">Remove From Favorite</string>
+
+    <string name="saved_state_posters" translatable="false">postersUrl</string>
+    <string name="saved_state_overview" translatable="false">overview</string>
+    <string name="saved_state_title" translatable="false">title</string>
+    <string name="saved_state_date" translatable="false">date</string>
+    <string name="saved_state_rate" translatable="false">rate</string>
+    <string name="saved_state_movie_id" translatable="false">movieID</string>
+    <string name="saved_state_trailers" translatable="false">trailers</string>
+    <string name="saved_state_reviews" translatable="false">reviews</string>
 </resources>

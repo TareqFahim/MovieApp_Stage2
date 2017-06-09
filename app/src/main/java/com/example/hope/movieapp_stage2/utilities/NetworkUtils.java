@@ -2,6 +2,8 @@ package com.example.hope.movieapp_stage2.utilities;
 
 import android.net.Uri;
 
+import com.example.hope.movieapp_stage2.BuildConfig;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -13,7 +15,7 @@ public class NetworkUtils {
 
     final static String MOVIE_BASE_URL = "http://api.themoviedb.org/3/movie";
     final static String API_KEY_PARAM = "api_key";
-    final static String api_key = "INSERT API KEY!";
+    final static String api_key = BuildConfig.API_KEY;
 
     public static URL buildMoviesUrl(String sortBy) {
         Uri builtUri = Uri.parse(MOVIE_BASE_URL + "/" + sortBy + "?").buildUpon()

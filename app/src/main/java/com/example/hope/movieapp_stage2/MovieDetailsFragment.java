@@ -1,6 +1,5 @@
 package com.example.hope.movieapp_stage2;
 
-import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
@@ -46,6 +45,7 @@ public class MovieDetailsFragment extends Fragment implements FetchJsonAsyncTask
     URL url = null;
     Cursor moviesInDb;
     boolean isMovieinDb = false;
+    Bundle savedInstanceState;
 
     SelectedMovieData mSelectedMovieData;
 
@@ -55,20 +55,25 @@ public class MovieDetailsFragment extends Fragment implements FetchJsonAsyncTask
     @Override
     public void onStart() {
         super.onStart();
+        if (savedInstanceState != null) {
+            getSavedState();
+            setTrailersListAdapter();
+        } else {
+            FetchJsonAsyncTask fetchTrailers = new FetchJsonAsyncTask();
+            url = NetworkUtils.buildTrailersUrl(movieID);
+            fetchTrailers.setCallBackContext(this);
+            fetchTrailers.execute(url);
 
-        FetchJsonAsyncTask fetchTrailers = new FetchJsonAsyncTask();
-        url = NetworkUtils.buildTrailersUrl(movieID);
-        fetchTrailers.setCallBackContext(this);
-        fetchTrailers.execute(url);
+        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_movie_details, container, false);
+        this.savedInstanceState = savedInstanceState;
         trailersListView = (ListView) rootView.findViewById(R.id.trailers_list);
         header = inflater.inflate(R.layout.details_fragment_header, null, false);
-//        reviewList = (ListView) rootView.findViewById(R.id.reviews_list);
 
         Intent intent = getActivity().getIntent();
         if (intent.hasExtra("xx")) {
@@ -125,7 +130,7 @@ public class MovieDetailsFragment extends Fragment implements FetchJsonAsyncTask
                                 itemToDeleteID = moviesInDb.getInt(idColIndex);
                                 break;
                             }
-                        }while (moviesInDb.moveToNext());
+                        } while (moviesInDb.moveToNext());
                         itemToDeleteUri = itemToDeleteUri.buildUpon().appendPath(Integer.toString(itemToDeleteID)).build();
                         int noOfDeletedItems = getActivity().getContentResolver().delete(itemToDeleteUri, null, null);
                         if (noOfDeletedItems > 0) {
@@ -152,6 +157,16 @@ public class MovieDetailsFragment extends Fragment implements FetchJsonAsyncTask
             });
         }
         return rootView;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putStringArrayList(getString(R.string.saved_state_trailers), (ArrayList<String>) movieTrailers);
+    }
+
+    private void getSavedState() {
+        movieTrailers = this.savedInstanceState.getStringArrayList(getString(R.string.saved_state_trailers));
     }
 
     private void setFavBtnText() {

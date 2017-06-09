@@ -2,6 +2,7 @@ package com.example.hope.movieapp_stage2.utilities;
 
 import android.content.res.Resources;
 
+import com.example.hope.movieapp_stage2.BuildConfig;
 import com.example.hope.movieapp_stage2.R;
 
 import org.json.JSONArray;
@@ -27,7 +28,7 @@ public class MovieParser {
         final String OWM_RELEASE_DATE = "release_date";
         final String OWM_RATE = "vote_average";
         final String OWM_ID = "id";
-        final String API_KEY = "INSERT API KEY!";
+        final String API_KEY = BuildConfig.API_KEY;
 
         MoviesData moviesData = new MoviesData();
 

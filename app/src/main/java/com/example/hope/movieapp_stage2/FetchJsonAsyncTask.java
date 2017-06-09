@@ -35,7 +35,7 @@ public class FetchJsonAsyncTask extends AsyncTask<URL, Void, String> {
 
     @Override
     protected void onPostExecute(String s) {
-        if (!s.equals(null)) {
+        if (s != null) {
             super.onPostExecute(s);
             mReturnJson.setJson(s);
         }

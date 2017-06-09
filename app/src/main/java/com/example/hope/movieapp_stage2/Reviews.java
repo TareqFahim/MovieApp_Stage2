@@ -1,6 +1,7 @@
 package com.example.hope.movieapp_stage2;
 
 import android.content.Intent;
+import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
@@ -22,6 +23,7 @@ public class Reviews extends AppCompatActivity implements FetchJsonAsyncTask.Jso
     String movieID;
     URL url;
     List<String> movieReviews = new ArrayList<String>();
+    Bundle savedInstanceState;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

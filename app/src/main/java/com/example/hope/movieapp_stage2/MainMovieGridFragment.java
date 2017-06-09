@@ -42,6 +42,7 @@ public class MainMovieGridFragment extends Fragment implements FetchJsonAsyncTas
     MovieGridAdapter mAdapter;
     MoviesData moviesData;
     SelectedMovieData mSelectedMovieData;
+    Bundle savedInstanceState;
 
     String movieDisplayOrder = null;
     URL moviesUrl;
@@ -56,10 +57,12 @@ public class MainMovieGridFragment extends Fragment implements FetchJsonAsyncTas
         FetchJsonAsyncTask task = new FetchJsonAsyncTask();
         task.setCallBackContext(this);
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        movieDisplayOrder = preferences.getString(getString(R.string.pref_sorting_key), getString(R.string.pref_sorting_popular));
-        if (movieDisplayOrder.equals("favorite")) {
-//            Toast.makeText(getActivity(), movieDisplayOrder, Toast.LENGTH_LONG).show();
-//            movieDisplayOrder = "popular";
+        movieDisplayOrder = preferences.getString(getString(R.string.pref_sorting_key), getString(R.string.pref_sorting_default_value));
+
+        if (savedInstanceState != null){
+            getSavedState();
+            setMovieGridAdapter();
+        } else if (movieDisplayOrder.equals("favorite")) {
             displayFavoriteMovies();
         } else {
             moviesUrl = NetworkUtils.buildMoviesUrl(movieDisplayOrder);
@@ -74,7 +77,7 @@ public class MainMovieGridFragment extends Fragment implements FetchJsonAsyncTas
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_main_movie_grid, container, false);
-
+        this.savedInstanceState = savedInstanceState;
         int noOfColumns = 2;
         mMovieGrid = (RecyclerView) rootView.findViewById(R.id.rv_movie_grid);
         LinearLayoutManager layoutManager = new GridLayoutManager(getActivity(), noOfColumns);
@@ -82,6 +85,28 @@ public class MainMovieGridFragment extends Fragment implements FetchJsonAsyncTas
         mMovieGrid.setHasFixedSize(true);
 
         return rootView;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putStringArrayList(getString(R.string.saved_state_posters), (ArrayList<String>) moviesData.postersURL);
+        outState.putStringArrayList(getString(R.string.saved_state_date), (ArrayList<String>) moviesData.movieReleaseDate);
+        outState.putStringArrayList(getString(R.string.saved_state_movie_id), (ArrayList<String>) moviesData.movieID);
+        outState.putStringArrayList(getString(R.string.saved_state_overview), (ArrayList<String>) moviesData.movieOverview);
+        outState.putStringArrayList(getString(R.string.saved_state_title), (ArrayList<String>) moviesData.movieTitle);
+        outState.putStringArrayList(getString(R.string.saved_state_rate), (ArrayList<String>) moviesData.movieRate);
+    }
+
+    private void getSavedState(){
+        moviesData = new MoviesData();
+        moviesData.postersURL = (ArrayList) savedInstanceState.getStringArrayList(getString(R.string.saved_state_posters));
+        moviesData.movieID = (ArrayList) savedInstanceState.getStringArrayList(getString(R.string.saved_state_movie_id));
+        moviesData.movieOverview = (ArrayList) savedInstanceState.getStringArrayList(getString(R.string.saved_state_overview));
+        moviesData.movieRate = (ArrayList) savedInstanceState.getStringArrayList(getString(R.string.saved_state_rate));
+        moviesData.movieReleaseDate = (ArrayList) savedInstanceState.getStringArrayList(getString(R.string.saved_state_date));
+        moviesData.movieTitle = (ArrayList) savedInstanceState.getStringArrayList(getString(R.string.saved_state_title));
+
     }
 
     @Override
@@ -137,7 +162,7 @@ public class MainMovieGridFragment extends Fragment implements FetchJsonAsyncTas
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (key.equals(getString(R.string.pref_sorting_key))) {
-            movieDisplayOrder = sharedPreferences.getString(key, getResources().getString(R.string.pref_sorting_popular));
+            movieDisplayOrder = sharedPreferences.getString(key, getResources().getString(R.string.pref_sorting_default_value));
         }
     }
 
